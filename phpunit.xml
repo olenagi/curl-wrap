@@ -1,0 +1,5 @@
+<phpunit
+        bootstrap="src/CurlWrap/autoload.php"
+        colors="true"
+>
+</phpunit>
