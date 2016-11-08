@@ -12,6 +12,11 @@ namespace CurlWrap;
 class Curl
 {
     private $resource;
+    private $options = [];
+    private $errorNum = 0;
+    private $errorMsg = '';
+    private $headers = [];
+    private $content = false;
 
     /**
      * Curl constructor.
@@ -47,6 +52,7 @@ class Curl
      */
     public function setOpt($option, $value)
     {
+        $this->options[$option] = $value;
         $result = curl_setopt($this->resource, $option, $value);
         return $result;
     }
@@ -83,13 +89,57 @@ class Curl
     }
 
     /**
-     * Make request
+     * Make request by PUT method
+     *
+     * @param string $url
+     * @param array $data
+     * @return mixed
+     */
+    public function put($data = [], $url = '')
+    {
+        $this->setUrl($url);
+
+        $this->setOpt(CURLOPT_CUSTOMREQUEST, "PUT");
+        $this->setOpt(CURLOPT_POSTFIELDS, $data);
+
+        return $this->exec();
+    }
+
+    public function delete($url = '')
+    {
+        $this->setUrl($url);
+        $this->setOpt(CURLOPT_CUSTOMREQUEST, "DELETE");
+
+        return $this->exec();
+    }
+
+    /**
+     * Exec resource
      *
      * @return mixed
      */
     private function exec()
     {
-        $result = curl_exec($this->resource);
-        return $result;
+        $this->content = curl_exec($this->resource);
+        $this->errorNum = curl_errno($this->resource);
+        $this->errorMsg = curl_error($this->resource);
+        $this->headers = curl_getinfo($this->resource);
+
+        return $this->content ;
+    }
+
+    /**
+     * Close resource
+     *
+     * @return mixed
+     */
+    public function close()
+    {
+        $this->content = '';
+        $this->errorNum = 0;
+        $this->errorMsg = '';
+        $this->headers = [];
+
+        return curl_close($this->resource);
     }
 }
