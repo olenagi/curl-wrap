@@ -62,7 +62,7 @@ class Curl
         $this->setOpt(CURLOPT_HTTPGET, true);
         $this->setUrl($url);
 
-        return $this->request();
+        return $this->exec();
     }
 
     /**
@@ -79,7 +79,7 @@ class Curl
         $this->setOpt(CURLOPT_POST, true);
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
 
-        return $this->request();
+        return $this->exec();
     }
 
     /**
@@ -87,7 +87,7 @@ class Curl
      *
      * @return mixed
      */
-    private function request()
+    private function exec()
     {
         $result = curl_exec($this->resource);
         return $result;
