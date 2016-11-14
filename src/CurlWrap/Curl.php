@@ -83,7 +83,13 @@ class Curl
         $this->setUrl($url);
 
         $this->setOpt(CURLOPT_POST, true);
-        $this->setOpt(CURLOPT_POSTFIELDS, $data);
+
+        if ($data) {
+            if ($postFields = $this->getOpt(CURLOPT_POSTFIELDS)) {
+                $data = array_merge($postFields, $data);
+            }
+            $this->setOpt(CURLOPT_POSTFIELDS, $data);
+        }
 
         return $this->exec();
     }
@@ -100,6 +106,7 @@ class Curl
         $this->setUrl($url);
 
         $this->setOpt(CURLOPT_CUSTOMREQUEST, "PUT");
+
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
 
         return $this->exec();
@@ -125,7 +132,7 @@ class Curl
         $this->errorMsg = curl_error($this->resource);
         $this->headers = curl_getinfo($this->resource);
 
-        return $this->content ;
+        return $this->content;
     }
 
     /**
@@ -141,5 +148,37 @@ class Curl
         $this->headers = [];
 
         return curl_close($this->resource);
+    }
+
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @return int
+     */
+    public function getErrorNum()
+    {
+        return $this->errorNum;
+    }
+
+    /**
+     * @return string
+     */
+    public function getErrorMsg()
+    {
+        return $this->errorMsg;
+    }
+
+    /**
+     * Get option value by name
+     *
+     * @param $name
+     * @return bool|mixed
+     */
+    public function getOpt($name)
+    {
+        return isset($this->options[$name]) ? $this->options[$name] : false;
     }
 }
