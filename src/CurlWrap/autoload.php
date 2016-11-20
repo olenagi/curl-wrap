@@ -11,6 +11,7 @@ spl_autoload_register(
         if ($classes === null) {
             $classes = array(
                 'curlwrap\\curl' => '/Curl.php',
+                'curlwrap\\curlwrapexception' => '/CurlWrapException.php',
             );
         }
         $cn = strtolower($class);

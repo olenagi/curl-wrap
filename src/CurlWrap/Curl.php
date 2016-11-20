@@ -16,7 +16,7 @@ class Curl
     private $errorNum = 0;
     private $errorMsg = '';
     private $headers = [];
-    private $content = false;
+    private $content = '';
 
     /**
      * Curl constructor.
@@ -72,6 +72,46 @@ class Curl
     }
 
     /**
+     * Set file for upload
+     *
+     * @param $path
+     * @return bool
+     * @throws CurlWrapException
+     */
+    public function setFile($path)
+    {
+        if(!file_exists($path)){
+            throw new CurlWrapException('File not found');
+        }
+
+        return $this->setPostField('file', new \CURLFile($path));
+    }
+
+    /**
+     * Set post fields
+     *
+     * @param $data
+     * @return bool
+     */
+    public function setPostFields($data)
+    {
+        if ($postFields = $this->getOpt(CURLOPT_POSTFIELDS)) {
+            $data = array_merge($postFields, $data);
+        }
+        return $this->setOpt(CURLOPT_POSTFIELDS, $data);
+    }
+
+    /**
+     * @param mixed $name
+     * @param mixed $value
+     * @return bool
+     */
+    public function setPostField($name, $value)
+    {
+        return $this->setPostFields([$name => $value]);
+    }
+
+    /**
      * Make request by POST method
      *
      * @param string $url
@@ -81,15 +121,8 @@ class Curl
     public function post($data = [], $url = '')
     {
         $this->setUrl($url);
-
         $this->setOpt(CURLOPT_POST, true);
-
-        if ($data) {
-            if ($postFields = $this->getOpt(CURLOPT_POSTFIELDS)) {
-                $data = array_merge($postFields, $data);
-            }
-            $this->setOpt(CURLOPT_POSTFIELDS, $data);
-        }
+        $this->setPostFields($data);
 
         return $this->exec();
     }
@@ -104,18 +137,17 @@ class Curl
     public function put($data = [], $url = '')
     {
         $this->setUrl($url);
-
         $this->setOpt(CURLOPT_CUSTOMREQUEST, "PUT");
-
-        $this->setOpt(CURLOPT_POSTFIELDS, $data);
+        $this->setPostFields($data);
 
         return $this->exec();
     }
 
-    public function delete($url = '')
+    public function delete($url = '', $data= [])
     {
         $this->setUrl($url);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, "DELETE");
+        $this->setPostFields($data);
 
         return $this->exec();
     }
@@ -149,6 +181,32 @@ class Curl
 
         return curl_close($this->resource);
     }
+
+    /**
+     * @return resource
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+
 
     public function getHeaders()
     {
