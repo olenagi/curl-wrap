@@ -15,7 +15,7 @@ class CurlTest extends TestCase
 {
     public function testSendFile()
     {
-        $curl = new Curl('http://check.loc');
+        $curl = new Curl();
         $curl->setOpt(CURLOPT_RETURNTRANSFER, true);
         $curl->setFile(__DIR__.'/files/file.txt');
         $result = $curl->post([], 'http://example.com');
