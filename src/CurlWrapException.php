@@ -6,7 +6,7 @@
  * Time: 13:52
  */
 
-namespace CurlWrap;
+namespace olenagi\CurlWrap;
 
 
 class CurlWrapException extends \Exception

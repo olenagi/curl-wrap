@@ -6,7 +6,7 @@
  * Time: 1:31
  */
 
-namespace CurlWrap;
+namespace olenagi\CurlWrap;
 
 
 class Curl
