@@ -1,0 +1,21 @@
+{
+    "name": "olenagi/curl-wrap",
+    "description": "wrapper for curl extesion",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "olenagi",
+            "email": "o.nagovsky@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "olenagi\\CurlWrap": "src/"
+        }
+    }
+}
