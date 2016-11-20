@@ -8,7 +8,7 @@
  */
 
 use \PHPUnit\Framework\TestCase;
-use CurlWrap\Curl;
+use olenagi\CurlWrap\Curl;
 
 
 class CurlTest extends TestCase
