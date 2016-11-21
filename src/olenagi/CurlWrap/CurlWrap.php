@@ -14,10 +14,6 @@ class CurlWrap
 
     private $resource;
     private $options = [];
-    private $errorNum = 0;
-    private $errorMsg = '';
-    private $headers = [];
-    private $content = '';
 
     /**
      * Curl constructor.
@@ -156,16 +152,18 @@ class CurlWrap
     /**
      * Exec resource
      *
-     * @return mixed
+     * @return CurlResponse
      */
     private function exec()
     {
-        $this->content = curl_exec($this->resource);
-        $this->errorNum = curl_errno($this->resource);
-        $this->errorMsg = curl_error($this->resource);
-        $this->headers = curl_getinfo($this->resource);
+        $response = new CurlResponse(
+            curl_exec($this->resource),
+            curl_errno($this->resource),
+            curl_error($this->resource),
+            curl_getinfo($this->resource)
+        );
 
-        return $this->content;
+        return $response;
     }
 
     /**
@@ -189,45 +187,6 @@ class CurlWrap
     public function getResource()
     {
         return $this->resource;
-    }
-
-    /**
-     * @return array
-     */
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-
-
-    public function getHeaders()
-    {
-        return $this->headers;
-    }
-
-    /**
-     * @return int
-     */
-    public function getErrorNum()
-    {
-        return $this->errorNum;
-    }
-
-    /**
-     * @return string
-     */
-    public function getErrorMsg()
-    {
-        return $this->errorMsg;
     }
 
     /**
