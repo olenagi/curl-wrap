@@ -11,6 +11,7 @@ namespace olenagi\CurlWrap;
 
 class CurlWrap
 {
+
     private $resource;
     private $options = [];
     private $errorNum = 0;
