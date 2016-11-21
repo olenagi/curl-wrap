@@ -8,14 +8,14 @@
  */
 
 use \PHPUnit\Framework\TestCase;
-use olenagi\CurlWrap\Curl;
+use olenagi\CurlWrap\CurlWrap;
 
 
 class CurlTest extends TestCase
 {
     public function testSendFile()
     {
-        $curl = new Curl();
+        $curl = new CurlWrap();
         $curl->setOpt(CURLOPT_RETURNTRANSFER, true);
         $curl->setFile(__DIR__.'/files/file.txt');
         $result = $curl->post([], 'http://example.com');

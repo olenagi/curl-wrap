@@ -9,7 +9,7 @@
 namespace olenagi\CurlWrap;
 
 
-class Curl
+class CurlWrap
 {
     private $resource;
     private $options = [];
