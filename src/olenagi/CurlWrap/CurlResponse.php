@@ -14,15 +14,15 @@ class CurlResponse
     private $options = [];
     private $errorNum = 0;
     private $errorMsg = '';
-    private $headers = [];
+    private $info = [];
     private $content = '';
 
-    public function __construct($content, $headers, $errorNum,$errorMsg)
+    public function __construct($content, $errorNum, $errorMsg, $info)
     {
         $this->content = $content;
-        $this->headers = $headers;
-        $this->errorMsg = $errorNum;
+        $this->errorNum = $errorNum;
         $this->errorMsg = $errorMsg;
+        $this->info = $info;
     }
 
     /**
@@ -52,9 +52,9 @@ class CurlResponse
     /**
      * @return array
      */
-    public function getHeaders()
+    public function getInfo()
     {
-        return $this->headers;
+        return $this->info;
     }
 
     /**
@@ -63,6 +63,14 @@ class CurlResponse
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOk()
+    {
+        return isset($this->info['http_code']) ? $this->info['http_code'] == '200' : false;
     }
 
 

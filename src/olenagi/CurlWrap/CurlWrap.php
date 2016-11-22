@@ -25,9 +25,16 @@ class CurlWrap
         if (!extension_loaded('curl')) {
             throw new \Exception("cURL extension not found");
         }
-
-        $this->resource = curl_init();
+        $this->init();
         $this->setUrl($url);
+    }
+
+    /**
+     *  Initialization
+     */
+    public function init()
+    {
+        $this->resource = curl_init();
     }
 
     /**
@@ -58,7 +65,7 @@ class CurlWrap
      * Make request by GET method
      *
      * @param $url
-     * @return mixed
+     * @return CurlResponse
      */
     public function get($url = '')
     {
@@ -113,7 +120,7 @@ class CurlWrap
      *
      * @param string $url
      * @param array $data
-     * @return mixed
+     * @return CurlResponse
      */
     public function post($data = [], $url = '')
     {
@@ -129,7 +136,7 @@ class CurlWrap
      *
      * @param string $url
      * @param array $data
-     * @return mixed
+     * @return CurlResponse
      */
     public function put($data = [], $url = '')
     {
@@ -140,6 +147,11 @@ class CurlWrap
         return $this->exec();
     }
 
+    /**
+     * @param string $url
+     * @param array $data
+     * @return CurlResponse
+     */
     public function delete($url = '', $data= [])
     {
         $this->setUrl($url);
