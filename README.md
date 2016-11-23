@@ -5,7 +5,7 @@ CurlWrap is wrapper of the PHP cURL extension;
 ### Instalation
 To install CurlWrap, simply:
 
-    $ composer require php-curl-class/php-curl-class
+    $ composer require olenagi/curl-wrap
 ### Requirements
 
 PHP Curl Class works with PHP 5.3, 5.4, 5.5, 5.6, 7.0, 7.1, and HHVM.
