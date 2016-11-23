@@ -18,23 +18,29 @@ class CurlWrap
     /**
      * Curl constructor.
      * @param string $url
+     * @param bool $returnTransfer
      * @throws \Exception
      */
-    public function __construct($url = '')
+    public function __construct($url = '', $returnTransfer = true)
     {
         if (!extension_loaded('curl')) {
             throw new \Exception("cURL extension not found");
         }
         $this->init();
         $this->setUrl($url);
+
+        if ($returnTransfer) {
+            $this->setOpt(CURLOPT_RETURNTRANSFER, true);
+        }
     }
 
     /**
+     * @param string $url
      *  Initialization
      */
-    public function init()
+    public function init($url = '')
     {
-        $this->resource = curl_init();
+        $this->resource = curl_init($url);
     }
 
     /**
@@ -185,11 +191,6 @@ class CurlWrap
      */
     public function close()
     {
-        $this->content = '';
-        $this->errorNum = 0;
-        $this->errorMsg = '';
-        $this->headers = [];
-
         return curl_close($this->resource);
     }
 

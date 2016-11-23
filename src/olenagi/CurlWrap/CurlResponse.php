@@ -11,7 +11,6 @@ namespace olenagi\CurlWrap;
 
 class CurlResponse
 {
-    private $options = [];
     private $errorNum = 0;
     private $errorMsg = '';
     private $info = [];
@@ -23,14 +22,6 @@ class CurlResponse
         $this->errorNum = $errorNum;
         $this->errorMsg = $errorMsg;
         $this->info = $info;
-    }
-
-    /**
-     * @return array
-     */
-    public function getOptions()
-    {
-        return $this->options;
     }
 
     /**
