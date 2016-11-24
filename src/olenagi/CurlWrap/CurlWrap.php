@@ -86,6 +86,19 @@ class CurlWrap
     }
 
     /**
+     * Set array of options
+     *
+     * @param $options
+     * @return bool
+     */
+    public function setOpts($options)
+    {
+        $this->options = array_merge($this->options, $options);
+        $result = curl_setopt_array($this->resource, $options);
+        return $result;
+    }
+
+    /**
      * Set file for upload
      *
      * @param $path
