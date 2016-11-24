@@ -12,16 +12,6 @@ namespace olenagi\CurlWrap;
 class CurlWrap extends BaseCurlWrap
 {
     /**
-     * Set url for curl
-     * @param $url
-     * @return bool
-     */
-    public function setUrl($url)
-    {
-        return $url ? $this->setOpt(CURLOPT_URL, $url) : false;
-    }
-
-    /**
      * Set file for upload
      *
      * @param $path
@@ -30,7 +20,7 @@ class CurlWrap extends BaseCurlWrap
      */
     public function setFile($path)
     {
-        if(!file_exists($path)){
+        if (!file_exists($path)) {
             throw new CurlWrapException('File not found');
         }
 
@@ -49,10 +39,20 @@ class CurlWrap extends BaseCurlWrap
     {
         $this->setOpt(CURLOPT_HTTPGET, true);
 
-        $url = $url.'?'.http_build_query($params);
+        $url = $url . '?' . http_build_query($params);
         $this->setUrl($url);
 
         return $this->exec();
+    }
+
+    /**
+     * Set url for curl
+     * @param $url
+     * @return bool
+     */
+    public function setUrl($url)
+    {
+        return $url ? $this->setOpt(CURLOPT_URL, $url) : false;
     }
 
     /**
@@ -92,7 +92,7 @@ class CurlWrap extends BaseCurlWrap
      * @param array $data
      * @return CurlResponse
      */
-    public function delete($url = '', $data= [])
+    public function delete($url = '', $data = [])
     {
         $this->setUrl($url);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, "DELETE");

@@ -28,19 +28,10 @@ class BaseCurlWrap
         }
         $this->init($url);
 
+
         if ($returnTransfer) {
             $this->setOpt(CURLOPT_RETURNTRANSFER, true);
         }
-    }
-
-    public function __clone()
-    {
-        $this->resource = curl_copy_handle($this->resource);
-    }
-
-    function __destruct()
-    {
-        $this->close();
     }
 
     /**
@@ -50,25 +41,6 @@ class BaseCurlWrap
     public function init($url = '')
     {
         $this->resource = curl_init($url);
-    }
-
-    /**
-     * @return resource
-     */
-    public function getResource()
-    {
-        return $this->resource;
-    }
-
-    /**
-     * Get option value by name
-     *
-     * @param $name
-     * @return bool|mixed
-     */
-    public function getOpt($name)
-    {
-        return isset($this->options[$name]) ? $this->options[$name] : false;
     }
 
     /**
@@ -85,6 +57,34 @@ class BaseCurlWrap
         return $result;
     }
 
+    public function __clone()
+    {
+        $this->resource = curl_copy_handle($this->resource);
+    }
+
+    function __destruct()
+    {
+        $this->close();
+    }
+
+    /**
+     * Close resource
+     *
+     * @return mixed
+     */
+    public function close()
+    {
+        return curl_close($this->resource);
+    }
+
+    /**
+     * @return resource
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
     /**
      * Set array of options
      *
@@ -96,6 +96,16 @@ class BaseCurlWrap
         $this->options = array_merge($this->options, $options);
         $result = curl_setopt_array($this->resource, $options);
         return $result;
+    }
+
+    /**
+     * @param mixed $name
+     * @param mixed $value
+     * @return bool
+     */
+    public function setPostField($name, $value)
+    {
+        return $this->setPostFields([$name => $value]);
     }
 
     /**
@@ -113,13 +123,24 @@ class BaseCurlWrap
     }
 
     /**
-     * @param mixed $name
-     * @param mixed $value
-     * @return bool
+     * Get option value by name
+     *
+     * @param $name
+     * @return bool|mixed
      */
-    public function setPostField($name, $value)
+    public function getOpt($name)
     {
-        return $this->setPostFields([$name => $value]);
+        return isset($this->options[$name]) ? $this->options[$name] : false;
+    }
+
+    /**
+     * Reset
+     */
+    public function reset()
+    {
+        curl_reset($this->resource);
+        $this->options = [];
+        $this->resource = null;
     }
 
     /**
@@ -137,25 +158,5 @@ class BaseCurlWrap
         );
 
         return $response;
-    }
-
-    /**
-     * Close resource
-     *
-     * @return mixed
-     */
-    public function close()
-    {
-        return curl_close($this->resource);
-    }
-
-    /**
-     * Reset
-     */
-    public function reset()
-    {
-        curl_reset($this->resource);
-        $this->options = [];
-        $this->resource = null;
     }
 }
