@@ -26,8 +26,7 @@ class CurlWrap
         if (!extension_loaded('curl')) {
             throw new \Exception("cURL extension not found");
         }
-        $this->init();
-        $this->setUrl($url);
+        $this->init($url);
 
         if ($returnTransfer) {
             $this->setOpt(CURLOPT_RETURNTRANSFER, true);
@@ -44,6 +43,14 @@ class CurlWrap
     }
 
     /**
+     * @return resource
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+    /**
      * Set url for curl
      * @param $url
      * @return bool
@@ -51,6 +58,17 @@ class CurlWrap
     public function setUrl($url)
     {
         return $url ? $this->setOpt(CURLOPT_URL, $url) : false;
+    }
+
+    /**
+     * Get option value by name
+     *
+     * @param $name
+     * @return bool|mixed
+     */
+    public function getOpt($name)
+    {
+        return isset($this->options[$name]) ? $this->options[$name] : false;
     }
 
     /**
@@ -65,20 +83,6 @@ class CurlWrap
         $this->options[$option] = $value;
         $result = curl_setopt($this->resource, $option, $value);
         return $result;
-    }
-
-    /**
-     * Make request by GET method
-     *
-     * @param $url
-     * @return CurlResponse
-     */
-    public function get($url = '')
-    {
-        $this->setOpt(CURLOPT_HTTPGET, true);
-        $this->setUrl($url);
-
-        return $this->exec();
     }
 
     /**
@@ -119,6 +123,25 @@ class CurlWrap
     public function setPostField($name, $value)
     {
         return $this->setPostFields([$name => $value]);
+    }
+
+
+    /**
+     * Make request by GET method
+     *
+     * @param string $url
+     * @param array $params
+     * @return CurlResponse
+     */
+
+    public function get($url = '', $params = [])
+    {
+        $this->setOpt(CURLOPT_HTTPGET, true);
+
+        $url = $url.'?'.http_build_query($params);
+        $this->setUrl($url);
+
+        return $this->exec();
     }
 
     /**
@@ -195,21 +218,12 @@ class CurlWrap
     }
 
     /**
-     * @return resource
+     * Reset
      */
-    public function getResource()
+    public function reset()
     {
-        return $this->resource;
-    }
-
-    /**
-     * Get option value by name
-     *
-     * @param $name
-     * @return bool|mixed
-     */
-    public function getOpt($name)
-    {
-        return isset($this->options[$name]) ? $this->options[$name] : false;
+        curl_reset($this->resource);
+        $this->options = [];
+        $this->resource = null;
     }
 }

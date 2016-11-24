@@ -40,7 +40,7 @@ class CurlTest extends TestCase
         $this->assertTrue($response->isOk());
     }
 
-    public function testSetFile()
+    public function testSendFile()
     {
         $curl = new CurlWrap($this->url);
         $curl->setFile($this->filePath);
