@@ -35,70 +35,40 @@ class CurlWrap extends BaseCurlWrap
      * @return CurlResponse
      */
 
-    public function get($url = '', $params = [])
+    public function get()
     {
         $this->setOpt(CURLOPT_HTTPGET, true);
-
-        $url = $url . '?' . http_build_query($params);
-        $this->setUrl($url);
-
         return $this->exec();
-    }
-
-    /**
-     * Set url for curl
-     * @param $url
-     * @return bool
-     */
-    public function setUrl($url)
-    {
-        return $url ? $this->setOpt(CURLOPT_URL, $url) : false;
     }
 
     /**
      * Make request by POST method
      *
-     * @param string $url
-     * @param array $data
      * @return CurlResponse
      */
-    public function post($data = [], $url = '')
+    public function post()
     {
-        $this->setUrl($url);
         $this->setOpt(CURLOPT_POST, true);
-        $this->setPostFields($data);
-
         return $this->exec();
     }
 
     /**
      * Make request by PUT method
      *
-     * @param string $url
-     * @param array $data
      * @return CurlResponse
      */
-    public function put($data = [], $url = '')
+    public function put()
     {
-        $this->setUrl($url);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, "PUT");
-        $this->setPostFields($data);
-
         return $this->exec();
     }
 
     /**
-     * @param string $url
-     * @param array $data
      * @return CurlResponse
      */
-    public function delete($url = '', $data = [])
+    public function delete()
     {
-        $this->setUrl($url);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, "DELETE");
-        $this->setPostFields($data);
-
         return $this->exec();
     }
-
 }

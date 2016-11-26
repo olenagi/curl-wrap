@@ -14,33 +14,30 @@ class BaseCurlWrap
 
     protected $resource;
     protected $options = [];
+    protected $url;
 
     /**
      * Curl constructor.
      * @param string $url
+     * @param array $params
      * @param bool $returnTransfer
      * @throws \Exception
      */
-    public function __construct($url = '', $returnTransfer = true)
+    public function __construct($url = '', $params = [])
     {
         if (!extension_loaded('curl')) {
             throw new \Exception("cURL extension not found");
         }
-        $this->init($url);
-
-
-        if ($returnTransfer) {
-            $this->setOpt(CURLOPT_RETURNTRANSFER, true);
-        }
+        $this->init();
+        $this->setUrl($url, $params);
     }
 
     /**
-     * @param string $url
      *  Initialization
      */
-    public function init($url = '')
+    private function init()
     {
-        $this->resource = curl_init($url);
+        $this->resource = curl_init();
     }
 
     /**
@@ -159,4 +156,54 @@ class BaseCurlWrap
 
         return $response;
     }
+
+    /**
+     * Get version info
+     *
+     * @return array
+     */
+    public function version()
+    {
+        return curl_version();
+    }
+
+    /**
+     * Get options
+     *
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+
+    /**
+     * Set url for curl
+     * @param $url
+     * @param array $params
+     * @return bool
+     * @throws CurlWrapException
+     */
+    public function setUrl($url, $params = [])
+    {
+        if ($url && $params && is_array($params)) {
+            //TODO Make lib for add params in url. This is simple method
+            $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') .  http_build_query($params);
+        }
+
+        $this->url = $url;
+        return $this->setOpt(CURLOPT_URL, $url);
+    }
+
+    /**
+     * Get url
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+
 }
