@@ -20,13 +20,12 @@ class BaseCurlWrap
      * Curl constructor.
      * @param string $url
      * @param array $params
-     * @param bool $returnTransfer
      * @throws \Exception
      */
     public function __construct($url = '', $params = [])
     {
         if (!extension_loaded('curl')) {
-            throw new \Exception("cURL extension not found");
+            throw new CurlWrapException("cURL extension not found");
         }
         $this->init();
         $this->setUrl($url, $params);
@@ -46,9 +45,14 @@ class BaseCurlWrap
      * @param $option
      * @param $value
      * @return bool
+     * @throws CurlWrapException
      */
     public function setOpt($option, $value)
     {
+        if (!$this->resource) {
+            throw new CurlWrapException("Need initialization");
+        }
+
         $this->options[$option] = $value;
         $result = curl_setopt($this->resource, $option, $value);
         return $result;
