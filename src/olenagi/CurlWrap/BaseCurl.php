@@ -9,7 +9,7 @@
 namespace olenagi\CurlWrap;
 
 
-class BaseCurlWrap
+class BaseCurl
 {
 
     protected $resource;
@@ -20,12 +20,12 @@ class BaseCurlWrap
      * Curl constructor.
      * @param string $url
      * @param array $urlParams
-     * @throws CurlWrapException
+     * @throws CurlException
      */
     public function __construct($url = '', $urlParams = [])
     {
         if (!extension_loaded('curl')) {
-            throw new CurlWrapException("cURL extension not found");
+            throw new CurlException("cURL extension not found");
         }
         $this->resource = curl_init();
         $this->setUrl($url, $urlParams);
@@ -37,12 +37,12 @@ class BaseCurlWrap
      * @param $option
      * @param $value
      * @return bool
-     * @throws CurlWrapException
+     * @throws CurlException
      */
     public function setOpt($option, $value)
     {
         if (!$this->resource) {
-            throw new CurlWrapException("Need initialization");
+            throw new CurlException("Need initialization");
         }
 
         $this->options[$option] = $value;
@@ -179,7 +179,7 @@ class BaseCurlWrap
      * @param $url
      * @param array $params
      * @return bool
-     * @throws CurlWrapException
+     * @throws CurlException
      */
     public function setUrl($url, $params = [])
     {

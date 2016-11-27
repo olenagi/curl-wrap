@@ -9,19 +9,19 @@
 namespace olenagi\CurlWrap;
 
 
-class CurlWrap extends BaseCurlWrap
+class Curl extends BaseCurl
 {
     /**
      * Set file for upload
      *
      * @param $path
      * @return bool
-     * @throws CurlWrapException
+     * @throws CurlException
      */
     public function setFile($path)
     {
         if (!file_exists($path)) {
-            throw new CurlWrapException('File not found');
+            throw new CurlException('File not found');
         }
 
         return $this->setPostField('file', new \CURLFile($path));

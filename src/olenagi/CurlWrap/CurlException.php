@@ -9,7 +9,7 @@
 namespace olenagi\CurlWrap;
 
 
-class CurlWrapException extends \Exception
+class CurlException extends \Exception
 {
 
 }
