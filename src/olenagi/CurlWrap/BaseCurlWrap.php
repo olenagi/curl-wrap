@@ -19,24 +19,16 @@ class BaseCurlWrap
     /**
      * Curl constructor.
      * @param string $url
-     * @param array $params
-     * @throws \Exception
+     * @param array $urlParams
+     * @throws CurlWrapException
      */
-    public function __construct($url = '', $params = [])
+    public function __construct($url = '', $urlParams = [])
     {
         if (!extension_loaded('curl')) {
             throw new CurlWrapException("cURL extension not found");
         }
-        $this->init();
-        $this->setUrl($url, $params);
-    }
-
-    /**
-     *  Initialization
-     */
-    private function init()
-    {
         $this->resource = curl_init();
+        $this->setUrl($url, $urlParams);
     }
 
     /**
