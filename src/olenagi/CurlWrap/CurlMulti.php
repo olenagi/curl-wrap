@@ -11,9 +11,8 @@ namespace olenagi\CurlWrap;
 
 class CurlMulti
 {
-    protected $resource;
-    protected $childResources;
-    protected $stillRunning;
+    public $resource;
+    public $stillRunning;
 
     /**
      * CurlMulti constructor.
@@ -31,21 +30,21 @@ class CurlMulti
     {
         return curl_multi_add_handle($this->resource, $childResource);
     }
-
-    /**
-     * @return mixed
-     */
-    public function getChildResources()
-    {
-        return $this->childResources;
-    }
-
+    
     /**
      * @return int
      */
     public function exec()
     {
         return curl_multi_exec($this->resource, $this->stillRunning);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStillRunning()
+    {
+        return $this->stillRunning;
     }
 
     /**
@@ -59,7 +58,7 @@ class CurlMulti
     /**
      * @return array
      */
-    public function info()
+    public function infoRead()
     {
         return curl_multi_info_read($this->resource);
     }
@@ -80,5 +79,33 @@ class CurlMulti
     public function remove($childResource)
     {
         return curl_multi_remove_handle($this->resource, $childResource);
+    }
+
+    public function run()
+    {
+        $result = [];
+        do {
+            $code = $this->exec();
+        }
+        while ($code == CURLM_CALL_MULTI_PERFORM);
+
+        while ($this->getStillRunning() && ($code == CURLM_OK)) {
+            if ($this->select() != -1) {
+                do {
+                    $code = $this->exec();
+                    while ($info = $this->infoRead()) {
+                        $resource = $info['handle'];
+                        $result[] = new CurlResponse(
+                            $this->content($resource),
+                            curl_errno($resource),
+                            curl_error($resource),
+                            curl_getinfo($resource)
+                        );
+                    }
+                } while($code == CURLM_CALL_MULTI_PERFORM);
+            }
+        }
+
+        return $result;
     }
 }

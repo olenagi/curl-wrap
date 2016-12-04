@@ -24,6 +24,8 @@ class CurlResponse
         $this->info = $info;
     }
 
+
+
     /**
      * @return int
      */

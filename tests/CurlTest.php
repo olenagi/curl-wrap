@@ -7,8 +7,9 @@
  * Time: 14:31
  */
 
+use olenagi\CurlWrap\CurlMulti;
 use \PHPUnit\Framework\TestCase;
-use olenagi\CurlWrap\CurlWrap;
+use olenagi\CurlWrap\Curl;
 
 
 class CurlTest extends TestCase
@@ -18,7 +19,7 @@ class CurlTest extends TestCase
 
     public function testMethods()
     {
-        $curl = new CurlWrap();
+        $curl = new Curl();
         $curl->setOpt(CURLOPT_RETURNTRANSFER, true);
         $curl->setUrl($this->url);
         $response = $curl->get();
@@ -29,7 +30,7 @@ class CurlTest extends TestCase
         $this->assertTrue($response->isOk());
 
 
-        $curl = new CurlWrap();
+        $curl = new Curl();
         $curl->setOpt(CURLOPT_RETURNTRANSFER, true);
         $curl->setFile($this->filePath);
         $curl->setUrl($this->url);
@@ -42,10 +43,29 @@ class CurlTest extends TestCase
 
     public function testSendFile()
     {
-        $curl = new CurlWrap($this->url);
+        $curl = new Curl($this->url);
         $curl->setFile($this->filePath);
         $response = $curl->post();
         $this->assertTrue($response->isOk());
 
+    }
+
+    public function testCurlMulti()
+    {
+        $curl = new Curl();
+        $curl->setOpt(CURLOPT_RETURNTRANSFER, true);
+        $curl->setFile($this->filePath);
+        $curl->setUrl("http://check.loc/index.php");
+
+        $curl2 = new Curl();
+        $curl2->setOpt(CURLOPT_RETURNTRANSFER, true);
+        $curl2->setFile($this->filePath);
+        $curl2->setUrl("http://check.loc/index2.php");
+
+        $curlMulti = new CurlMulti();
+        $curlMulti->add($curl->getResource());
+        $curlMulti->add($curl2->getResource());
+        $result = $curlMulti->run();
+        $this->assertTrue((bool) $result);
     }
 }
