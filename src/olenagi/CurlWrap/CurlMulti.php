@@ -13,6 +13,7 @@ class CurlMulti
 {
     public $resource;
     public $stillRunning;
+    private $childResources = [];
 
     /**
      * CurlMulti constructor.
@@ -28,6 +29,7 @@ class CurlMulti
      */
     public function add($childResource)
     {
+        $this->childResources[] = $childResource;
         return curl_multi_add_handle($this->resource, $childResource);
     }
     
@@ -78,6 +80,8 @@ class CurlMulti
      */
     public function remove($childResource)
     {
+        $key = array_search($childResource, $this->childResources);
+        unset($this->childResources[$key]);
         return curl_multi_remove_handle($this->resource, $childResource);
     }
 
@@ -86,6 +90,9 @@ class CurlMulti
      */
     public function close()
     {
+        foreach ($this->childResources as $childResource) {
+            curl_close($childResource);
+        }
         return curl_multi_close ( $this->resource );
     }
 
