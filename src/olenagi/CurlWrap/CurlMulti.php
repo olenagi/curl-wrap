@@ -81,6 +81,20 @@ class CurlMulti
         return curl_multi_remove_handle($this->resource, $childResource);
     }
 
+    /**
+     * Close multi curl
+     */
+    public function close()
+    {
+        return curl_multi_close ( $this->resource );
+    }
+
+    /**
+     * Execute all handler
+     *
+     * Array of response objects
+     * @return array
+     */
     public function run()
     {
         $result = [];
@@ -97,9 +111,7 @@ class CurlMulti
                         $resource = $info['handle'];
                         $result[] = new CurlResponse(
                             $this->content($resource),
-                            curl_errno($resource),
-                            curl_error($resource),
-                            curl_getinfo($resource)
+                            $resource
                         );
                     }
                 } while($code == CURLM_CALL_MULTI_PERFORM);

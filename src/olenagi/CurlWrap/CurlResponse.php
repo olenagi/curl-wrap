@@ -16,15 +16,13 @@ class CurlResponse
     private $info = [];
     private $content = '';
 
-    public function __construct($content, $errorNum, $errorMsg, $info)
+    public function __construct($content, $resource)
     {
         $this->content = $content;
-        $this->errorNum = $errorNum;
-        $this->errorMsg = $errorMsg;
-        $this->info = $info;
+        $this->errorNum = curl_errno($resource);
+        $this->errorMsg = curl_error($resource);
+        $this->info = curl_getinfo($resource);
     }
-
-
 
     /**
      * @return int

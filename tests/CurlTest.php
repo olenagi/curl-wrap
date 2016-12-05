@@ -44,6 +44,7 @@ class CurlTest extends TestCase
     public function testSendFile()
     {
         $curl = new Curl($this->url);
+        $curl->setOpt(CURLOPT_RETURNTRANSFER, true);
         $curl->setFile($this->filePath);
         $response = $curl->post();
         $this->assertTrue($response->isOk());

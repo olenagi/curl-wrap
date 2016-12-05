@@ -31,25 +31,6 @@ class BaseCurl
         $this->setUrl($url, $urlParams);
     }
 
-    /**
-     * Set option
-     *
-     * @param $option
-     * @param $value
-     * @return bool
-     * @throws CurlException
-     */
-    public function setOpt($option, $value)
-    {
-        if (!$this->resource) {
-            throw new CurlException("Need initialization");
-        }
-
-        $this->options[$option] = $value;
-        $result = curl_setopt($this->resource, $option, $value);
-        return $result;
-    }
-
     public function __clone()
     {
         $this->resource = curl_copy_handle($this->resource);
@@ -127,6 +108,25 @@ class BaseCurl
     }
 
     /**
+     * Set option
+     *
+     * @param $option
+     * @param $value
+     * @return bool
+     * @throws CurlException
+     */
+    public function setOpt($option, $value)
+    {
+        if (!$this->resource) {
+            throw new CurlException("Need initialization");
+        }
+
+        $this->options[$option] = $value;
+        $result = curl_setopt($this->resource, $option, $value);
+        return $result;
+    }
+
+    /**
      * Reset
      */
     public function reset()
@@ -134,23 +134,6 @@ class BaseCurl
         curl_reset($this->resource);
         $this->options = [];
         $this->resource = null;
-    }
-
-    /**
-     * Exec resource
-     *
-     * @return CurlResponse
-     */
-    protected function exec()
-    {
-        $response = new CurlResponse(
-            curl_exec($this->resource),
-            curl_errno($this->resource),
-            curl_error($this->resource),
-            curl_getinfo($this->resource)
-        );
-
-        return $response;
     }
 
     /**
@@ -173,6 +156,14 @@ class BaseCurl
         return $this->options;
     }
 
+    /**
+     * Get url
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
 
     /**
      * Set url for curl
@@ -185,7 +176,7 @@ class BaseCurl
     {
         if ($url && $params && is_array($params)) {
             //TODO Make lib for add params in url. This is simple method
-            $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') .  http_build_query($params);
+            $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') . http_build_query($params);
         }
 
         $this->url = $url;
@@ -193,12 +184,13 @@ class BaseCurl
     }
 
     /**
-     * Get url
-     * @return mixed
+     * Exec curl
+     * @return CurlResponse
      */
-    public function getUrl()
+    protected function exec()
     {
-        return $this->url;
+        $response = new CurlResponse(curl_exec($this->resource), $this->resource);
+        return $response;
     }
 
 

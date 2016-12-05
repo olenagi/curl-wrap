@@ -29,9 +29,6 @@ class Curl extends BaseCurl
 
     /**
      * Make request by GET method
-     *
-     * @param string $url
-     * @param array $params
      * @return CurlResponse
      */
 
