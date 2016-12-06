@@ -23,6 +23,8 @@ class CurlTest extends TestCase
         $curl->setOpt(CURLOPT_RETURNTRANSFER, true);
         $curl->setUrl($this->url);
         $response = $curl->get();
+
+        $this->assertTrue((bool) $response->url);
         $this->assertTrue($response->isOk());
 
 
