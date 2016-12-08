@@ -189,7 +189,7 @@ class BaseCurl
      */
     protected function exec()
     {
-        $response = new CurlResponse(curl_exec($this->resource), $this->resource);
+        $response = new CurlResponse($this->resource);
         return $response;
     }
 

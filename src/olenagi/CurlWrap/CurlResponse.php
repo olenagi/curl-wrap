@@ -16,14 +16,32 @@ class CurlResponse
     private $info = [];
     private $content = '';
 
-    public function __construct($content, $resource)
+
+    /**
+     * CurlResponse constructor.
+     * @param resource $resource
+     */
+    public function __construct($resource)
     {
-        $this->content = $content;
+        $this->content = curl_exec($resource);
         $this->errorNum = curl_errno($resource);
         $this->errorMsg = curl_error($resource);
         $this->info = curl_getinfo($resource);
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     * @throws CurlException
+     */
+    public function __get($name)
+    {
+        if (array_key_exists($name, $this->info)) {
+            return $this->info[$name];
+        }
+
+        throw new CurlException("Undefined object's property");
+    }
     /**
      * @return int
      */
@@ -63,6 +81,4 @@ class CurlResponse
     {
         return isset($this->info['http_code']) ? $this->info['http_code'] == '200' : false;
     }
-
-
 }
