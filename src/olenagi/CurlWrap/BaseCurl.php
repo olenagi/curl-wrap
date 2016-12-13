@@ -64,14 +64,9 @@ class BaseCurl
      *
      * @param $options
      * @return bool
-     * @throws CurlException
      */
     public function setOpts($options)
     {
-        if (!$this->resource) {
-            throw new CurlException("Need initialization");
-        }
-
         $this->options = array_merge($this->options, $options);
         $result = curl_setopt_array($this->resource, $options);
         return $result;
@@ -136,13 +131,9 @@ class BaseCurl
      */
     public function reset()
     {
-        if (!$this->resource) {
-            throw new CurlException("Need initialization");
-        }
-
+        curl_reset($this->resource);
         $this->options = [];
         $this->resource = null;
-        curl_reset($this->resource);
     }
 
     /**
@@ -195,15 +186,10 @@ class BaseCurl
     /**
      * Exec curl
      * @return CurlResponse
-     * @throws CurlException
      */
     protected function exec()
     {
-        if (!$this->resource) {
-            throw new CurlException("Need initialization");
-        }
-
-        $response = new CurlResponse(curl_exec($this->resource), $this->resource);
+        $response = new CurlResponse($this->resource);
         return $response;
     }
 

@@ -19,12 +19,11 @@ class CurlResponse
 
     /**
      * CurlResponse constructor.
-     * @param $content
      * @param resource $resource
      */
-    public function __construct($content, $resource)
+    public function __construct($resource)
     {
-        $this->content = $content;
+        $this->content = curl_exec($resource);
         $this->errorNum = curl_errno($resource);
         $this->errorMsg = curl_error($resource);
         $this->info = curl_getinfo($resource);

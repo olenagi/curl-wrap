@@ -116,10 +116,7 @@ class CurlMulti
                     $code = $this->exec();
                     while ($info = $this->infoRead()) {
                         $resource = $info['handle'];
-                        $result[] = new CurlResponse(
-                            $this->content($resource),
-                            $resource
-                        );
+                        $result[] = new CurlResponse($resource);
                     }
                 } while($code == CURLM_CALL_MULTI_PERFORM);
             }
